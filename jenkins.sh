@@ -22,7 +22,28 @@ copy_reference_file() {
 		[[ ${rel} == plugins/*.jpi ]] && touch "$JENKINS_HOME/${rel}.pinned"
 	fi;
 }
-: ${JENKINS_HOME:="/var/jenkins_home"}
+
+# Start rpcbind for NFSv3 mounts
+sudo service rpcbind start
+
+# If NFS parameters are passed in then try to mount the target
+if [ -n "${NFS_EXPORT+set}" ] && [ -n "${NFS_MOUNT+set}" ]; then
+    if [ -e ${NFS_MOUNT} ]; then
+        echo "Attempting to mount ${NFS_EXPORT} to ${NFS_MOUNT}"
+        sudo mount -t nfs $NFS_EXPORT $NFS_MOUNT
+    else
+        echo "Creating ${NFS_MOUNT}"
+        sudo mkdir -p $NFS_MOUNT
+        echo "Attempting to mount ${NFS_EXPORT} to ${NFS_MOUNT}"
+        sudo mount -t nfs $NFS_EXPORT $NFS_MOUNT
+    fi
+    
+    : ${JENKINS_HOME:=${NFS_MOUNT}}
+  
+else
+    : ${JENKINS_HOME:="/var/jenkins_home"}
+fi
+
 export -f copy_reference_file
 touch "${COPY_REFERENCE_FILE_LOG}" || (echo "Can not write to ${COPY_REFERENCE_FILE_LOG}. Wrong volume permissions?" && exit 1)
 echo "--- Copying files at $(date)" >> "$COPY_REFERENCE_FILE_LOG"
