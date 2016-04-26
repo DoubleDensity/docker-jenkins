@@ -44,6 +44,11 @@ else
     : ${JENKINS_HOME:="/var/jenkins_home"}
 fi
 
+if [ -e ${JENKINS_HOME}/dockercfg ]; then
+    echo "dockercfg detected on NFS mount, installing to /root"
+    cp -v ${JENKINS_HOME}/dockercfg /root/.dockercfg
+fi
+
 export -f copy_reference_file
 touch "${COPY_REFERENCE_FILE_LOG}" || (echo "Can not write to ${COPY_REFERENCE_FILE_LOG}. Wrong volume permissions?" && exit 1)
 echo "--- Copying files at $(date)" >> "$COPY_REFERENCE_FILE_LOG"
