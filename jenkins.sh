@@ -46,7 +46,7 @@ fi
 
 if [ -e ${JENKINS_HOME}/dockercfg ]; then
     echo "dockercfg detected on NFS mount, installing to /root"
-    cp -v ${JENKINS_HOME}/dockercfg /root/.dockercfg
+    sudo cp -v ${JENKINS_HOME}/dockercfg /root/.dockercfg
 fi
 
 export -f copy_reference_file
