@@ -1,4 +1,4 @@
-# Official Jenkins Docker image
+# Jenkins Docker NFS image
 
 [![Docker Repository on Quay](https://quay.io/repository/doubledensity/jenkins/status "Docker Repository on Quay")](https://quay.io/repository/doubledensity/jenkins)
 
@@ -25,10 +25,6 @@ This fork allows you to store all Jenkins data on an external NFS mount point:
 ```
 docker run -p 8080:8080 -p 50000:50000 --privileged -e "NFS_EXPORT=192.168.69.71:/stornext/snfs1/jenkins" -e NFS_MOUNT="/var/jenkins_home" quay.io/doubledensity/jenkins
 ```
-
-This will store the jenkins data in `/your/home` on the host.
-Ensure that `/your/home` is accessible by the jenkins user in container (jenkins user - uid 1000) or use `-u some_other_user` parameter with `docker run`.
-
 
 # Setting the number of executors
 
