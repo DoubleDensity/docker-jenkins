@@ -1,6 +1,12 @@
 FROM java:8-jdk
 
-RUN apt-get update && apt-get install -y git curl zip nfs-common sudo docker.io && rm -rf /var/lib/apt/lists/*
+RUN apt-get purge lxc-docker*
+RUN apt-get purge docker.io*
+
+RUN apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
+RUN echo "deb https://apt.dockerproject.org/repo debian-jessie main" > /etc/apt/sources.list.d/docker.list
+
+RUN apt-get update && apt-get install -y git curl zip nfs-common sudo apt-transport-https ca-certificates docker-engine && rm -rf /var/lib/apt/lists/*
 
 ENV JENKINS_HOME /var/jenkins_home
 ENV JENKINS_SLAVE_AGENT_PORT 50000
