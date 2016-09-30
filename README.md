@@ -4,8 +4,10 @@
 
 The Jenkins Continuous Integration and Delivery server.
 
-This is a fully functional Jenkins server, based on the Long Term Support release
-[http://jenkins-ci.org/](http://jenkins-ci.org/).
+This is a fully functional Jenkins server, based on the Long Term Support release.
+[http://jenkins.io/](http://jenkins.io/).
+
+For weekly releases check out [`jenkinsci/jenkins`](https://hub.docker.com/r/jenkinsci/jenkins/)
 
 
 <img src="http://jenkins-ci.org/sites/default/files/jenkins_logo.png"/>
@@ -127,12 +129,21 @@ wish the target installation to look like :
 
 ```
 FROM jenkins
-COPY plugins.txt /usr/share/jenkins/ref/
 COPY custom.groovy /usr/share/jenkins/ref/init.groovy.d/custom.groovy
-RUN /usr/local/bin/plugins.sh /usr/share/jenkins/ref/plugins.txt
 ```
 
-When jenkins container starts, it will check JENKINS_HOME has this reference content, and copy them
+## Preinstalling plugins
+
+You can rely on the `install-plugins.sh` script to pass a set of plugins to download with their dependencies.
+Use plugin artifact ID, whithout `-plugin` extension, and append the version if needed separated by `:`.
+Dependencies that are already included in the Jenkins war will only be downloaded if their required version is newer than the one included.
+
+```
+FROM jenkins
+RUN /usr/local/bin/install-plugins.sh docker-slaves github-branch-source:1.8
+```
+
+When jenkins container starts, it will check `JENKINS_HOME` has this reference content, and copy them
 there if required. It will not override such files, so if you upgraded some plugins from UI they won't
 be reverted on next start.
 
@@ -141,28 +152,11 @@ In case you *do* want to override, append '.override' to the name of the referen
 
 Also see [JENKINS-24986](https://issues.jenkins-ci.org/browse/JENKINS-24986)
 
-For your convenience, you also can use a plain text file to define plugins to be installed
-(using core-support plugin format).
-All plugins need to be listed in the form `pluginID:version` as there is no transitive dependency resolution.
+
+Here is an example to get the list of plugins from an existing server:
 
 ```
-credentials:1.18
-maven-plugin:2.7.1
-...
-```
-
-And in derived Dockerfile just invoke the utility `plugins.sh` script
-
-```
-FROM jenkins
-COPY plugins.txt /usr/share/jenkins/plugins.txt
-RUN /usr/local/bin/plugins.sh /usr/share/jenkins/plugins.txt
-```
-
-Here is an example to get the list of plugins from an existing server you can use the following curl command:
-
-```
-JENKINS_HOST=myhost.com:port
+JENKINS_HOST=username:password@myhost.com:port
 curl -sSL "http://$JENKINS_HOST/pluginManager/api/xml?depth=1&xpath=/*/*/shortName|/*/*/version&wrapper=plugins" | perl -pe 's/.*?<shortName>([\w-]+).*?<version>([^<]+)()(<\/\w+>)+/\1 \2\n/g'|sed 's/ /:/'
 ```
 
@@ -176,11 +170,25 @@ script-security:1.13
 ...
 ```
 
+For 2.x-derived images, you may also want to
+
+    RUN echo 2.0 > /usr/share/jenkins/ref/jenkins.install.UpgradeWizard.state
+
+to indicate that this Jenkins installation is fully configured.
+Otherwise a banner will appear prompting the user to install additional plugins,
+which may be inappropriate.
+
 # Upgrading
 
 All the data needed is in the /var/jenkins_home directory - so depending on how you manage that - depends on how you upgrade. Generally - you can copy it out - and then "docker pull" the image again - and you will have the latest LTS - you can then start up with -v pointing to that data (/var/jenkins_home) and everything will be as you left it.
 
 As always - please ensure that you know how to drive docker - especially volume handling!
+
+## Upgrading plugins
+
+By default, plugins will be upgraded if they haven't been upgraded manually and if the version from the docker image is newer than the version in the container. Versions installed by the docker image are tracked through a marker file.
+
+The default behaviour when upgrading from a docker image that didn't write marker files is to leave existing plugins in place. If you want to upgrade existing plugins without marker you may run the docker image with `-e TRY_UPGRADE_IF_NO_MARKER=true`. Then plugins will be upgraded if the version provided by the docker image is newer.
 
 # Building
 

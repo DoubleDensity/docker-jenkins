@@ -3,6 +3,7 @@
 # check dependencies
 (
     type docker &>/dev/null || ( echo "docker is not available"; exit 1 )
+    type unzip &>/dev/null || ( echo "unzip is not available"; exit 1 )
     type curl &>/dev/null || ( echo "curl is not available"; exit 1 )
 )>&2
 
@@ -42,11 +43,7 @@ function retry {
 
 function get_jenkins_url {
     if [ -z "${DOCKER_HOST}" ]; then
-        if [ "$(uname)" == "Darwin" ]; then
-            DOCKER_IP=docker.local
-        else
-            DOCKER_IP=localhost
-        fi
+        DOCKER_IP=localhost
     else
         DOCKER_IP=$(echo "$DOCKER_HOST" | sed -e 's|tcp://\(.*\):[0-9]*|\1|')
     fi
