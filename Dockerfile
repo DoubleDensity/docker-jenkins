@@ -15,7 +15,7 @@ ENV JENKINS_SLAVE_AGENT_PORT 50000
 ARG user=jenkins
 ARG group=jenkins
 ARG uid=501
-ARG gid=80
+ARG gid=20
 
 # Jenkins is run with user `jenkins`, uid = 1000
 # If you bind mount a volume from the host or a data container, 
