@@ -10,9 +10,9 @@ RUN apt-get install -y git curl zip nfs-common sudo ca-certificates ccache cmake
 
 # adding Ansible
 RUN apt-get update
-RUN apt-get install software-properties-common
-RUN apt-add-repository ppa:ansible/ansible
-RUN apt-get install ansible
+RUN apt-get install -y software-properties-common
+RUN apt-add-repository -y ppa:ansible/ansible
+RUN apt-get install -y ansible
 
 # adding Docker 1.10.3 specifically to interoperate with CoreOS Stable 1122.3
 ADD https://get.docker.com/builds/Linux/x86_64/docker-1.10.3.tgz /
