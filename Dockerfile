@@ -9,9 +9,9 @@ RUN echo "deb https://apt.dockerproject.org/repo debian-jessie main" > /etc/apt/
 RUN apt-get install -y git curl zip nfs-common sudo ca-certificates ccache cmake && rm -rf /var/lib/apt/lists/*
 
 # adding Ansible
-RUN sudo apt-get install software-properties-common
-RUN sudo apt-add-repository ppa:ansible/ansible
-RUN sudo apt-get install ansible
+RUN apt-get install software-properties-common
+RUN apt-add-repository ppa:ansible/ansible
+RUN apt-get install ansible
 
 # adding Docker 1.10.3 specifically to interoperate with CoreOS Stable 1122.3
 ADD https://get.docker.com/builds/Linux/x86_64/docker-1.10.3.tgz /
