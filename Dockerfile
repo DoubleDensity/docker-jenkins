@@ -15,7 +15,7 @@ RUN apt-add-repository -y ppa:ansible/ansible
 RUN apt-get install -y ansible
 
 # pysphere for Ansible VMware support
-RUN apt-get install python-pip
+RUN apt-get install -y python-pip
 RUN pip install pysphere
 
 # adding Docker 1.10.3 specifically to interoperate with CoreOS Stable 1122.3
