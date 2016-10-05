@@ -9,6 +9,7 @@ RUN echo "deb https://apt.dockerproject.org/repo debian-jessie main" > /etc/apt/
 RUN apt-get install -y git curl zip nfs-common sudo ca-certificates ccache cmake && rm -rf /var/lib/apt/lists/*
 
 # adding Ansible
+RUN apt-get update
 RUN apt-get install software-properties-common
 RUN apt-add-repository ppa:ansible/ansible
 RUN apt-get install ansible
