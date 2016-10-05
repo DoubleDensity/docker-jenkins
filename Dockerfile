@@ -12,7 +12,7 @@ RUN apt-get install -y git curl zip nfs-common sudo ca-certificates ccache cmake
 RUN apt-get update
 RUN apt-get install -y software-properties-common
 RUN apt-add-repository -y ppa:ansible/ansible
-RUN apt-get install -y ansible
+RUN apt-get install -y ansible=2.1.1.0-1~bpo8+1
 
 # pysphere for Ansible VMware support
 RUN apt-get install -y python-pip
