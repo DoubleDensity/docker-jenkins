@@ -1,4 +1,5 @@
 FROM openjdk:8-jdk
+MAINTAINER Buttetsu Batou <doubledense@gmail.com>
 
 RUN apt-get update
 RUN apt-get install apt-transport-https
@@ -21,6 +22,9 @@ WORKDIR /ansible
 RUN sed -i.bak 's|https://github.com/ansible/ansible-modules-core|https://github.com/patbaker82/ansible-modules-core.git|g' .gitmodules
 RUN git submodule sync --recursive
 RUN git submodule update --init --recursive
+RUN git --git-dir=/ansible/lib/ansible/modules/core/.git --work-tree=/ansible/lib/ansible/modules/core config user.email "doubledense@gmail.com"
+RUN git --git-dir=/ansible/lib/ansible/modules/core/.git --work-tree=/ansible/lib/ansible/modules/core config user.name "Buttetsu Batou"
+RUN git --git-dir=/ansible/lib/ansible/modules/core/.git --work-tree=/ansible/lib/ansible/modules/core pull origin devel
 RUN bash -c "source ./hacking/env-setup"
 RUN ln -s /ansible/bin/ansible-playbook /usr/bin/ansible-playbook
 
