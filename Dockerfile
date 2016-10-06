@@ -9,10 +9,13 @@ RUN echo "deb https://apt.dockerproject.org/repo debian-jessie main" > /etc/apt/
 RUN apt-get install -y git curl zip nfs-common sudo ca-certificates ccache cmake && rm -rf /var/lib/apt/lists/*
 
 # adding Ansible
-RUN apt-get update
-RUN apt-get install -y software-properties-common
-RUN apt-add-repository -y ppa:ansible/ansible
-RUN apt-get install -y ansible=2.1.1.0-1~bpo8+1
+RUN git clone git://github.com/ansible/ansible.git --recursive
+WORKDIR /ansible
+# using patbaker82's fork until PR #3643 is accepted into master, see https://github.com/ansible/ansible-modules-core/pull/3643 and https://github.com/ansible/ansible-modules-core/issues/3615
+# this is needed to be able to specify VM MAC addresses in playbook
+RUN sed -i.bak 's|https://github.com/ansible/ansible-modules-core|https://github.com/patbaker82/ansible-modules-core.git|g' .gitmodules
+RUN git submodule sync
+RUN ln -s /ansible/bin/ansible-playbook /usr/bin/ansible-playbook
 
 # pysphere for Ansible VMware support
 RUN apt-get install -y python-pip
