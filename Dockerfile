@@ -21,7 +21,7 @@ WORKDIR /ansible
 RUN sed -i.bak 's|https://github.com/ansible/ansible-modules-core|https://github.com/patbaker82/ansible-modules-core.git|g' .gitmodules
 RUN git submodule sync --recursive
 RUN git submodule update --init --recursive
-RUN source ./hacking/env-setup
+RUN bash -c "source ./hacking/env-setup"
 RUN ln -s /ansible/bin/ansible-playbook /usr/bin/ansible-playbook
 
 # pysphere for Ansible VMware support
