@@ -20,7 +20,6 @@ WORKDIR /ansible
 # this is needed to be able to specify VM MAC addresses in playbook
 RUN sed -i.bak 's|https://github.com/ansible/ansible-modules-core|https://github.com/patbaker82/ansible-modules-core.git|g' .gitmodules
 RUN git submodule sync --recursive
-RUN git pull --rebase
 RUN git submodule update --init --recursive
 RUN source ./hacking/env-setup
 RUN ln -s /ansible/bin/ansible-playbook /usr/bin/ansible-playbook
