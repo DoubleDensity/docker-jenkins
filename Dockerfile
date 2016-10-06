@@ -6,21 +6,23 @@ RUN apt-get install apt-transport-https
 RUN apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
 RUN echo "deb https://apt.dockerproject.org/repo debian-jessie main" > /etc/apt/sources.list.d/docker.list
 
-RUN apt-get install -y git curl zip nfs-common sudo ca-certificates ccache cmake && rm -rf /var/lib/apt/lists/*
+RUN apt-get install -y git curl zip nfs-common sudo ca-certificates ccache cmake python-pip && rm -rf /var/lib/apt/lists/*
 
 # adding Ansible
+RUN pip install paramiko PyYAML Jinja2 httplib2 six
 RUN git clone git://github.com/ansible/ansible.git --recursive
 WORKDIR /ansible
 # using patbaker82's fork until PR #3643 is accepted into master, see https://github.com/ansible/ansible-modules-core/pull/3643 and https://github.com/ansible/ansible-modules-core/issues/3615
 # this is needed to be able to specify VM MAC addresses in playbook
 RUN sed -i.bak 's|https://github.com/ansible/ansible-modules-core|https://github.com/patbaker82/ansible-modules-core.git|g' .gitmodules
 RUN git submodule sync --recursive
+RUN git pull --rebase
 RUN git submodule update --init --recursive
+RUN source ./hacking/env-setup
 RUN ln -s /ansible/bin/ansible-playbook /usr/bin/ansible-playbook
 
 # pysphere for Ansible VMware support
 RUN apt-get update
-RUN apt-get install -y python-pip
 RUN pip install pysphere
 
 # adding Docker 1.10.3 specifically to interoperate with CoreOS Stable 1122.3
