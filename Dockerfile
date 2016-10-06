@@ -8,6 +8,8 @@ RUN echo "deb https://apt.dockerproject.org/repo debian-jessie main" > /etc/apt/
 
 RUN apt-get install -y git curl zip nfs-common sudo ca-certificates ccache cmake python-dev python-pip libffi-dev libyaml-dev && rm -rf /var/lib/apt/lists/*
 
+RUN pip install -U pip setuptools
+
 # adding Ansible
 RUN pip install --upgrade cffi
 RUN pip install paramiko PyYAML Jinja2 httplib2 six
