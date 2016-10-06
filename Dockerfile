@@ -6,9 +6,10 @@ RUN apt-get install apt-transport-https
 RUN apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
 RUN echo "deb https://apt.dockerproject.org/repo debian-jessie main" > /etc/apt/sources.list.d/docker.list
 
-RUN apt-get install -y git curl zip nfs-common sudo ca-certificates ccache cmake python-dev python-pip libffi-dev libyaml-dev && rm -rf /var/lib/apt/lists/*
+RUN apt-get install -y git curl zip nfs-common sudo ca-certificates ccache cmake python-dev python-pip libyaml-dev && rm -rf /var/lib/apt/lists/*
 
 # adding Ansible
+RUN pip install --upgrade cffi
 RUN pip install paramiko PyYAML Jinja2 httplib2 six
 RUN git clone git://github.com/ansible/ansible.git --recursive
 WORKDIR /ansible
