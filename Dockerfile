@@ -24,6 +24,7 @@ RUN apt-get install -y python-pip
 RUN pip install pysphere
 
 # adding Docker 1.10.3 specifically to interoperate with CoreOS Stable 1122.3
+WORKDIR /
 ADD https://get.docker.com/builds/Linux/x86_64/docker-1.10.3.tgz /
 RUN tar zxvf docker-1.10.3.tgz
 
