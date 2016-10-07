@@ -25,6 +25,10 @@ RUN git submodule update --init --recursive
 RUN git --git-dir=/ansible/lib/ansible/modules/core/.git --work-tree=/ansible/lib/ansible/modules/core config user.email "doubledense@gmail.com"
 RUN git --git-dir=/ansible/lib/ansible/modules/core/.git --work-tree=/ansible/lib/ansible/modules/core config user.name "Buttetsu Batou"
 RUN git --git-dir=/ansible/lib/ansible/modules/core/.git --work-tree=/ansible/lib/ansible/modules/core pull origin devel
+RUN git --git-dir=/ansible/lib/ansible/modules/core/.git --work-tree=/ansible/lib/ansible/modules/core git remote add mihai https://github.com/mihai-satmarean/ansible-modules-core.git
+# need this patch to set boot media options on VMs https://github.com/ansible/ansible-modules-core/pull/3914/commits/4fc8f6a52356403ba9eb74c05a7c10450eea580b
+RUN git --git-dir=/ansible/lib/ansible/modules/core/.git --work-tree=/ansible/lib/ansible/modules/core git git fetch mihai
+RUN git --git-dir=/ansible/lib/ansible/modules/core/.git --work-tree=/ansible/lib/ansible/modules/core git cherry-pick 4fc8f6a52356403ba9eb74c05a7c10450eea580b
 RUN bash -c "source ./hacking/env-setup"
 RUN ln -s /ansible/bin/ansible-playbook /usr/bin/ansible-playbook
 
