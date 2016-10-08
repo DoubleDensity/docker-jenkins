@@ -25,6 +25,7 @@ RUN git submodule update --init --recursive
 RUN git --git-dir=/ansible/lib/ansible/modules/core/.git --work-tree=/ansible/lib/ansible/modules/core config user.email "doubledense@gmail.com"
 RUN git --git-dir=/ansible/lib/ansible/modules/core/.git --work-tree=/ansible/lib/ansible/modules/core config user.name "Buttetsu Batou"
 RUN git --git-dir=/ansible/lib/ansible/modules/core/.git --work-tree=/ansible/lib/ansible/modules/core pull origin devel
+RUN git --git-dir=/ansible/lib/ansible/modules/core/.git --work-tree=/ansible/lib/ansible/modules/core add cloud/vmware/vsphere_guest.py
 RUN git --git-dir=/ansible/lib/ansible/modules/core/.git --work-tree=/ansible/lib/ansible/modules/core commit -am "merging from patbaker82"
 RUN git --git-dir=/ansible/lib/ansible/modules/core/.git --work-tree=/ansible/lib/ansible/modules/core remote add mihai https://github.com/mihai-satmarean/ansible-modules-core.git
 # need this patch to set boot media options on VMs https://github.com/ansible/ansible-modules-core/pull/3914/commits/4fc8f6a52356403ba9eb74c05a7c10450eea580b
