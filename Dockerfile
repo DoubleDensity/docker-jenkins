@@ -17,20 +17,14 @@ RUN pip install --upgrade cffi
 RUN pip install paramiko PyYAML Jinja2 httplib2 six
 RUN git clone git://github.com/ansible/ansible.git --recursive
 WORKDIR /ansible
-# using patbaker82's fork until PR #3643 is accepted into master, see https://github.com/ansible/ansible-modules-core/pull/3643 and https://github.com/ansible/ansible-modules-core/issues/3615
-# this is needed to be able to specify VM MAC addresses in playbook
-RUN sed -i.bak 's|https://github.com/ansible/ansible-modules-core|https://github.com/patbaker82/ansible-modules-core.git|g' .gitmodules
+# using my fork that merges patbaker82's MAC address support and mihai-satmarean's bios boot options support
+# see https://github.com/ansible/ansible-modules-core/pull/3643 , https://github.com/ansible/ansible-modules-core/issues/3615 and https://github.com/ansible/ansible-modules-core/pull/3914/commits/4fc8f6a52356403ba9eb74c05a7c10450eea580b
+RUN sed -i.bak 's|https://github.com/ansible/ansible-modules-core|https://github.com/doubledensity/ansible-modules-core.git|g' .gitmodules
 RUN git submodule sync --recursive
 RUN git submodule update --init --recursive
 RUN git --git-dir=/ansible/lib/ansible/modules/core/.git --work-tree=/ansible/lib/ansible/modules/core config user.email "doubledense@gmail.com"
 RUN git --git-dir=/ansible/lib/ansible/modules/core/.git --work-tree=/ansible/lib/ansible/modules/core config user.name "Buttetsu Batou"
 RUN git --git-dir=/ansible/lib/ansible/modules/core/.git --work-tree=/ansible/lib/ansible/modules/core pull origin devel
-RUN git --git-dir=/ansible/lib/ansible/modules/core/.git --work-tree=/ansible/lib/ansible/modules/core remote add mihai https://github.com/mihai-satmarean/ansible-modules-core.git
-# need this patch to set boot media options on VMs https://github.com/ansible/ansible-modules-core/pull/3914/commits/4fc8f6a52356403ba9eb74c05a7c10450eea580b
-RUN git --git-dir=/ansible/lib/ansible/modules/core/.git --work-tree=/ansible/lib/ansible/modules/core fetch mihai
-RUN git --git-dir=/ansible/lib/ansible/modules/core/.git --work-tree=/ansible/lib/ansible/modules/core cherry-pick 4fc8f6a52356403ba9eb74c05a7c10450eea580b || exit 0
-RUN git --git-dir=/ansible/lib/ansible/modules/core/.git --work-tree=/ansible/lib/ansible/modules/core add cloud/vmware/vsphere_guest.py
-RUN git --git-dir=/ansible/lib/ansible/modules/core/.git --work-tree=/ansible/lib/ansible/modules/core commit -am "merging patches"
 RUN bash -c "source ./hacking/env-setup"
 RUN ln -s /ansible/bin/ansible-playbook /usr/bin/ansible-playbook
 
