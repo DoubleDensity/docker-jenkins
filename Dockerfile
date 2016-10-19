@@ -33,9 +33,9 @@ RUN apt-get update
 RUN pip install pysphere
 
 WORKDIR /tmp
+RUN mkdir /go
 RUN git clone https://github.com/coreos/fleet.git
-RUN cd fleet && go get ./...
-RUN cd fleet && ./build
+RUN export GOPATH=/go && cd fleet && ./build
 RUN cp fleet/bin/fleetctl /usr/local/bin
 RUN chmod +x /usr/local/bin/fleetctl
 
