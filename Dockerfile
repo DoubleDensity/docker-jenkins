@@ -32,17 +32,9 @@ RUN ln -s /ansible/bin/ansible-playbook /usr/bin/ansible-playbook
 RUN apt-get update
 RUN pip install pysphere
 
-# install golang for buidling fleet
-WORKDIR /tmp
-RUN wget https://storage.googleapis.com/golang/go1.7.1.linux-amd64.tar.gz
-RUN tar -C /usr/local -xzf go1.7.1.linux-amd64.tar.gz
-
 # install fleet for managing CoreOS clusters
-RUN mkdir /go
-RUN git clone https://github.com/coreos/fleet.git
-RUN export PATH=$PATH:/usr/local/go/bin && export GOPATH=/go && cd fleet && go get ./...
-RUN export PATH=$PATH:/usr/local/go/bin && export GOPATH=/go && cd fleet && ./build
-RUN cp fleet/bin/fleetctl /usr/local/bin
+RUN wget https://github.com/coreos/fleet/releases/download/v0.11.8/fleet-v0.11.8-linux-amd64.tar.gz && tar zxvf fleet-v0.11.8-linux-amd64.tar.gz
+RUN cp fleet-v0.11.8-linux-amd64/fleetctl /usr/local/bin
 RUN chmod +x /usr/local/bin/fleetctl
 
 # adding Docker 1.10.3 specifically to interoperate with CoreOS Stable 1122.3
