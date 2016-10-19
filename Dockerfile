@@ -40,8 +40,8 @@ RUN tar -C /usr/local -xzf go1.7.1.linux-amd64.tar.gz
 # install fleet for managing CoreOS clusters
 RUN mkdir /go
 RUN git clone https://github.com/coreos/fleet.git
-RUN export GOPATH=/go && cd fleet && go get ./...
-RUN export GOPATH=/go && cd fleet && ./build
+RUN export PATH=$PATH:/usr/local/go/bin && export GOPATH=/go && cd fleet && go get ./...
+RUN export PATH=$PATH:/usr/local/go/bin && export GOPATH=/go && cd fleet && ./build
 RUN cp fleet/bin/fleetctl /usr/local/bin
 RUN chmod +x /usr/local/bin/fleetctl
 
