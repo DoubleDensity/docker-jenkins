@@ -7,8 +7,7 @@ RUN apt-get install apt-transport-https
 RUN apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
 RUN echo "deb https://apt.dockerproject.org/repo debian-jessie main" > /etc/apt/sources.list.d/docker.list
 
-RUN apt-get install -y git curl zip nfs-common sudo ca-certificates ccache cmake python-dev libffi-dev libyaml-dev libssl-dev python-setuptools python-pip bc && rm -rf /var/lib/apt/lists/*
-RUN pip install awscli
+RUN apt-get install -y git curl zip nfs-common sudo ca-certificates ccache cmake python-dev libffi-dev libyaml-dev libssl-dev python-setuptools bc && rm -rf /var/lib/apt/lists/*
 
 # workaround from https://github.com/ansible/ansible/issues/17578
 RUN easy_install pip
@@ -32,6 +31,9 @@ RUN ln -s /ansible/bin/ansible-playbook /usr/bin/ansible-playbook
 # pysphere for Ansible VMware support
 RUN apt-get update
 RUN pip install pysphere
+
+# install AWS CLI
+RUN pip install awscli
 
 # install fleet for managing CoreOS clusters
 RUN wget https://github.com/coreos/fleet/releases/download/v0.11.8/fleet-v0.11.8-linux-amd64.tar.gz && tar zxvf fleet-v0.11.8-linux-amd64.tar.gz
