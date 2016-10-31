@@ -8,6 +8,7 @@ RUN apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 581
 RUN echo "deb https://apt.dockerproject.org/repo debian-jessie main" > /etc/apt/sources.list.d/docker.list
 
 RUN apt-get install -y git curl zip nfs-common sudo ca-certificates ccache cmake python-dev libffi-dev libyaml-dev libssl-dev python-setuptools bc && rm -rf /var/lib/apt/lists/*
+RUN pip install awscli
 
 # workaround from https://github.com/ansible/ansible/issues/17578
 RUN easy_install pip
