@@ -28,6 +28,22 @@ This fork allows you to store all Jenkins data on an external NFS mount point:
 docker run -p 8080:8080 -p 50000:50000 --privileged -e "NFS_EXPORT=192.168.69.71:/stornext/snfs1/jenkins" -e NFS_MOUNT="/var/jenkins_home" quay.io/doubledensity/jenkins
 ```
 
+this will automatically create a 'jenkins_home' volume on docker host, that will survive container stop/restart/deletion. 
+
+Avoid using a bind mount from a folder on host into `/var/jenkins_home`, as this might result in file permission issue. If you _really_ need to bind mount jenkins_home, ensure that directory on host is accessible by the jenkins user in container (jenkins user - uid 1000) or use `-u some_other_user` parameter with `docker run`.
+
+## Backing up data
+
+If you bind mount in a volume - you can simply back up that directory
+(which is jenkins_home) at any time.
+
+This is highly recommended. Treat the jenkins_home directory as you would a database - in Docker you would generally put a database on a volume.
+
+If your volume is inside a container - you can use ```docker cp $ID:/var/jenkins_home``` command to extract the data, or other options to find where the volume data is.
+Note that some symlinks on some OSes may be converted to copies (this can confuse jenkins with lastStableBuild links etc)
+
+For more info check Docker docs section on [Managing data in containers](https://docs.docker.com/engine/tutorials/dockervolumes/)
+
 # Setting the number of executors
 
 You can specify and set the number of executors of your Jenkins master instance using a groovy script. By default its set to 2 executors, but you can extend the image and change it to your desired number of executors :
