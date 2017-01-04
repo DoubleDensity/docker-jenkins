@@ -17,15 +17,15 @@ RUN pip install --upgrade cffi
 RUN pip install paramiko PyYAML Jinja2 httplib2 six
 RUN git clone git://github.com/ansible/ansible.git --recursive
 WORKDIR /ansible
-RUN git checkout 7f351a46e5506631d522c0495e1a0c4b345030f6
-# using my fork that merges patbaker82's MAC address support and mihai-satmarean's bios boot options support
-# see https://github.com/ansible/ansible-modules-core/pull/3643 , https://github.com/ansible/ansible-modules-core/issues/3615 and https://github.com/ansible/ansible-modules-core/pull/3914/commits/4fc8f6a52356403ba9eb74c05a7c10450eea580b
-RUN sed -i.bak 's|https://github.com/ansible/ansible-modules-core|https://github.com/doubledensity/ansible-modules-core.git|g' .gitmodules
-RUN git submodule sync --recursive
-RUN git submodule update --init --recursive
-RUN git --git-dir=/ansible/lib/ansible/modules/core/.git --work-tree=/ansible/lib/ansible/modules/core config user.email "doubledense@gmail.com"
-RUN git --git-dir=/ansible/lib/ansible/modules/core/.git --work-tree=/ansible/lib/ansible/modules/core config user.name "Buttetsu Batou"
-RUN git --git-dir=/ansible/lib/ansible/modules/core/.git --work-tree=/ansible/lib/ansible/modules/core pull origin devel
+# temporarilly disabling the use of my fork due to upstream merging/re-org of ansible-modules-core into ansible
+# # using my fork that merges patbaker82's MAC address support and mihai-satmarean's bios boot options support
+# # see https://github.com/ansible/ansible-modules-core/pull/3643 , https://github.com/ansible/ansible-modules-core/issues/3615 and https://github.com/ansible/ansible-modules-core/pull/3914/commits/4fc8f6a52356403ba9eb74c05a7c10450eea580b
+# RUN sed -i.bak 's|https://github.com/ansible/ansible-modules-core|https://github.com/doubledensity/ansible-modules-core.git|g' .gitmodules
+# RUN git submodule sync --recursive
+# RUN git submodule update --init --recursive
+# RUN git --git-dir=/ansible/lib/ansible/modules/core/.git --work-tree=/ansible/lib/ansible/modules/core config user.email "doubledense@gmail.com"
+# RUN git --git-dir=/ansible/lib/ansible/modules/core/.git --work-tree=/ansible/lib/ansible/modules/core config user.name "Buttetsu Batou"
+# RUN git --git-dir=/ansible/lib/ansible/modules/core/.git --work-tree=/ansible/lib/ansible/modules/core pull origin devel
 RUN bash -c "source ./hacking/env-setup"
 RUN ln -s /ansible/bin/ansible-playbook /usr/bin/ansible-playbook
 
