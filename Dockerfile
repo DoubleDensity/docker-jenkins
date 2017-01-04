@@ -17,6 +17,7 @@ RUN pip install --upgrade cffi
 RUN pip install paramiko PyYAML Jinja2 httplib2 six
 RUN git clone git://github.com/ansible/ansible.git --recursive
 WORKDIR /ansible
+RUN git checkout v2.2.1.0-0.1.rc1
 # using my fork that merges patbaker82's MAC address support and mihai-satmarean's bios boot options support
 # see https://github.com/ansible/ansible-modules-core/pull/3643 , https://github.com/ansible/ansible-modules-core/issues/3615 and https://github.com/ansible/ansible-modules-core/pull/3914/commits/4fc8f6a52356403ba9eb74c05a7c10450eea580b
 RUN sed -i.bak 's|https://github.com/ansible/ansible-modules-core|https://github.com/doubledensity/ansible-modules-core.git|g' .gitmodules
